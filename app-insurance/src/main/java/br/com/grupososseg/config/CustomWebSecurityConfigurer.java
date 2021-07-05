@@ -46,14 +46,15 @@ public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers(
-                "/register**",
-                "/dist/**"
+                "/register/**"
+                ,"/dist/**"
                 , "/plugins/**"
                 , "/bootstrap/**"
                 , "/extra/**"
                 , "/favicon.ico")
                 .permitAll()
-        .anyRequest().authenticated()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -71,16 +72,9 @@ public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(WebSecurity web) throws Exception {
-       web.ignoring().antMatchers("/register**",
-               "/dist/**"
-               , "/plugins/**"
-               , "/bootstrap/**"
-               , "/extra/**"
-               , "/favicon.ico"
-               , "/js/**"
-               , "/css/**"
-               , "/img/**"
-               ,"/resources/static/**").anyRequest();
+ // Solve the problem of static resources being intercepted
+        web.ignoring().antMatchers("/global/**");
     }
+
     
 }
