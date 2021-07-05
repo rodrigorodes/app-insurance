@@ -230,7 +230,7 @@ $(document).ready(function() {
 
   function getDashboardStatistics(){
       $.ajax({
-          url: "http://35.177.19.225:8081/api/dashboard/statistics",
+          url: "http://ec2-35-177-19-225.eu-west-2.compute.amazonaws.com:8081/api/dashboard/statistics",
           'dataType': "json",
           //context: document.body
         }).done(function(data) {
