@@ -230,7 +230,7 @@ $(document).ready(function() {
 
   function getDashboardStatistics(){
       $.ajax({
-          url: "http://localhost:8080/api/dashboard/statistics",
+          url: "http://localhost:8081/api/dashboard/statistics",
           'dataType': "json",
           //context: document.body
         }).done(function(data) {
