@@ -68,8 +68,19 @@ public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .permitAll();
 
     }
+    
+    @Override
     public void configure(WebSecurity web) throws Exception {
-       // web.ignoring().antMatchers("/resources/static/**").anyRequest();
+       web.ignoring().antMatchers("/register**",
+               "/dist/**"
+               , "/plugins/**"
+               , "/bootstrap/**"
+               , "/extra/**"
+               , "/favicon.ico"
+               , "/js/**"
+               , "/css/**"
+               , "/img/**"
+               ,"/resources/static/**").anyRequest();
     }
-
+    
 }
