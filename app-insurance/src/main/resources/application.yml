@@ -7,7 +7,7 @@ logging:
 spring:
   datasource:
     password: root
-    url: jdbc:mysql://localhost:3306/db-insurance?useSSL=false
+    url: jdbc:mysql://db:3306/db-insurance?useSSL=false
     username: root
   jpa:
     hibernate:
