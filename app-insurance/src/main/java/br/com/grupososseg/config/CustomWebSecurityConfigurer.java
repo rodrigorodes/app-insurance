@@ -48,6 +48,7 @@ public class CustomWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(
                 "/register/**"
                 ,"/dist/**"
+                ,"/admin/**"
                 , "/plugins/**"
                 , "/bootstrap/**"
                 , "/extra/**"
