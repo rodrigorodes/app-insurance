@@ -1,0 +1,47 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: springboot
+    networks:
+      - insurance
+    ports:
+      - "8081:8080"
+    environment:
+      - ADDITIONAL_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xmx1G -Xms128m -XX:MaxMetaspaceSize=128m
+    networks:
+      - insurance
+    depends_on:
+      - db  
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root 
+      MYSQL_DATABASE: db-insurance
+    networks:
+      - insurance
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8086:8080  
+    networks:
+      - insurance
+
+volumes:
+  db-data:
+   external: true
+
+networks:
+  insurance:
+    driver: bridge
