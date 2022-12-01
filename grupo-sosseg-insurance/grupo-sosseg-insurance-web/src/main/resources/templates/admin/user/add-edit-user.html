@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="layout">
+<head>
+<title>Cadastro</title>
+</head>
+<body>
+  <section layout:fragment="header">
+    <h1 sec:authorize="hasAnyRole('ROLE_ADMIN')">Cadastrar Influenciador</h1>
+    <h1 sec:authorize="hasAnyRole('ROLE_OWNER')">Cadastrar Admin</h1>
+    <ol class="breadcrumb">
+      <li>
+        <a href="/">
+          <i class="fa fa-dashboard"></i>
+          Home
+        </a>
+      </li>
+      <li sec:authorize="hasAnyRole('ROLE_ADMIN')" class="active">Cadastrar Influenciador</li>
+      <li sec:authorize="hasAnyRole('ROLE_OWNER')" class="active">Cadastrar Admin</li>
+    </ol>
+  </section>
+  <div layout:fragment="content">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Horizontal Form -->
+        <div class="box box-info">
+          <div class="box-header with-border">
+            <h3 sec:authorize="hasAnyRole('ROLE_ADMIN')" class="box-title">Cadastrar Influenciador</h3>
+            <h3 sec:authorize="hasAnyRole('ROLE_OWNER')" class="box-title">Cadastrar Admin</h3>
+          </div>
+          <!-- /.box-header -->
+          <!-- form start -->
+          <form th:action="@{/user/save}" th:object="${userDTO}" method="post" class="form-horizontal">
+            <div class="box-body">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Id</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" readonly="readonly" th:field="*{id}" placeholder="Cliente ID">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">
+                  Nome:
+                  <span>*</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" th:field="*{name}" placeholder="Nome Completo" />
+                  <p class="text-red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">
+                  Email:
+                  <span>*</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" th:field="*{email}" placeholder="Email" />
+                  <p class="text-red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">
+                  Perfil:
+                  <span>*</span>
+                </label>
+                <div class="col-sm-10">
+                  <select class="form-control" th:field="*{idRole}">
+                    <option value="">Selecione...</option>
+                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}" />
+                  </select>
+                  <p class="text-red" th:if="${#fields.hasErrors('idRole')}" th:errors="*{idRole}"></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">
+                  Senha:
+                  <span>*</span>
+                </label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" th:field="*{password}" placeholder="Senha" />
+                  <p class="text-red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                </div>
+              </div>
+
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer center">
+              <a th:href="@{/user/list}">
+                <button type="buttuston" class="btn btn-default">
+                  <i class="fa fa-right"></i>
+                  Cancelar
+                </button>
+              </a>
+              <button type="submit" class="btn btn-info pull-right">
+                <i class="fa fa-save"></i>
+                Salvar
+              </button>
+            </div>
+            <!-- /.box-footer -->
+          </form>
+        </div>
+        <!-- /.box -->
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <th:block layout:fragment="script">
+    <script>
+					
+				</script>
+  </th:block>
+
+</body>
+
+</html>

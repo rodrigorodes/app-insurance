@@ -11,36 +11,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-import br.com.grupososseg.core.repository.CustomerRepository;
-import br.com.grupososseg.core.repository.IUserRepository;
-import br.com.grupososseg.core.repository.InsuranceRepository;
+import br.com.grupososseg.core.repository.UserRepository;
+import br.com.grupososseg.core.repository.ContractRepository;
 
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardRestController {
 
-    private IUserRepository userRepository;
-    private CustomerRepository customerRepository;
-    private InsuranceRepository insuranceRepository;
+    private UserRepository userRepository;
+    private ContractRepository insuranceRepository;
     
     public DashboardRestController(
-    		IUserRepository userRepository, 
-    		CustomerRepository customerRepository,
-			InsuranceRepository insuranceRepository) {
+    		UserRepository userRepository,
+			ContractRepository insuranceRepository) {
 		this.userRepository = userRepository;
-		this.customerRepository = customerRepository;
 		this.insuranceRepository = insuranceRepository;
 	}
 
 	@GetMapping("/statistics")
     public HashMap<String, Object> getDashboardStatistics(){
-        long lProductCount = customerRepository.count();
         long lProductTypeCount = insuranceRepository.count();
         long lUserCount = userRepository.count();
         long lVisitorsCount = 0;
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("count_product", lProductCount);
         map.put("count_producttype", lProductTypeCount);
         map.put("count_user", lUserCount);
         map.put("count_visitors", lVisitorsCount);

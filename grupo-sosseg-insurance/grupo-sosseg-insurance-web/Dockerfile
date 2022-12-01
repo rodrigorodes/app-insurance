@@ -11,10 +11,10 @@ VOLUME /tmp
 EXPOSE 8080
 
 # The application's jar file
-ARG JAR_FILE=target/app-insurance-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/grupo-sosseg-insurance-web-1.0.0-SNAPSHOT.jar
 
 # Add the application's jar to the container
-ADD ${JAR_FILE} app-insurance-0.0.1-SNAPSHOT.jar
+ADD ${JAR_FILE} grupo-sosseg-insurance-web-1.0.0-SNAPSHOT.jar
 
 # Run the jar file 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom" ,"-jar","/app-insurance-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom" ,"-jar","/grupo-sosseg-insurance-web-1.0.0-SNAPSHOT.jar"]
