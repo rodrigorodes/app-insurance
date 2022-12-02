@@ -10,6 +10,10 @@ import br.com.grupososseg.model.User;
 public interface IUserService extends UserDetailsService{
     User save(UserRegistrationDTO registrationDto);
     Optional<User>  findByUsername(String username);
+	User findById(long id);
+	Iterable<User> findAll();
+	void delete(Long id);
+
 }
 
 

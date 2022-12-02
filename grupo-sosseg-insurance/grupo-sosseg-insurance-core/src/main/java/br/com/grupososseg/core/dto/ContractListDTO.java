@@ -1,53 +1,52 @@
 package br.com.grupososseg.core.dto;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
-import br.com.grupososseg.model.Insurance;
+import br.com.grupososseg.model.Contract;
 
-public class InsuranceDTO {
+public class ContractListDTO {
 
 	private static final String DD_MM_YYYY_HH_MM = "dd/MM/yyyy HH:mm";
-	private Integer key;
-	private Integer id;
-	private String carName;
-	private String customerName;
+	private Long id;
+	private String contractName;
+	private String contractDetail;
+	private String typeDeal;
 	private String updatedOn;
-	private String modifiedUserName;
+	private String userInfluencer;
 
-	public InsuranceDTO() {
+	public ContractListDTO() {
 	}
 
-	public InsuranceDTO(Optional<Integer> numberRevision, Insurance insurance) {
-		this.key = numberRevision.get();
-		this.id = insurance.getId();
-		this.carName = insurance.getCarName();
-		this.customerName = insurance.getCustomer().getName();
-		this.updatedOn = DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM).format(insurance.getCreatedOn());
-		this.modifiedUserName = insurance.getUser().getName();
+	public ContractListDTO(Contract contract) {
+		this.id = contract.getId();
+		this.contractName = contract.getContractName();
+		this.contractDetail = contract.getContractDetail();
+		this.updatedOn = DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM).format(contract.getCreatedOn());
+		this.userInfluencer = contract.getUserInfluencer().getName();
+		this.typeDeal = contract.getTypeDeal().getName();
 	}
 
-	public Integer getKey() {
-		return key;
-	}
-
-	public String getCarName() {
-		return carName;
-	}
-
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public String getCustomerName() {
-		return customerName;
+	public String getContractName() {
+		return contractName;
+	}
+
+	public String getContractDetail() {
+		return contractDetail;
 	}
 
 	public String getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public String getModifiedUserName() {
-		return modifiedUserName;
+	public String getUserInfluencer() {
+		return userInfluencer;
+	}
+
+	public String getTypeDeal() {
+		return typeDeal;
 	}
 }

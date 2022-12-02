@@ -5,9 +5,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.history.RevisionRepository;
 
-import br.com.grupososseg.model.Insurance;
+import br.com.grupososseg.model.Contract;
 
-public interface InsuranceRepository extends JpaRepository<Insurance, Integer>, RevisionRepository<Insurance, Integer, Integer>{
+public interface ContractRepository extends JpaRepository<Contract, Long>, RevisionRepository<Contract, Long, Long>{
 
-	 Optional<Insurance> getByCustomer_Id(Integer id);
+	 Optional<Contract> getByUserAdmin_Id(Long id);
 }

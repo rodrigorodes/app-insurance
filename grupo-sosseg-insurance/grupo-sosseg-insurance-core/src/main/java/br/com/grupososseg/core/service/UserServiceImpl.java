@@ -1,9 +1,8 @@
 package br.com.grupososseg.core.service;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,52 +10,71 @@ import org.springframework.stereotype.Service;
 
 import br.com.grupososseg.core.dto.UserRegistrationDTO;
 import br.com.grupososseg.core.repository.IRoleRepository;
-import br.com.grupososseg.core.repository.IUserRepository;
-import br.com.grupososseg.model.RoleEnum;
+import br.com.grupososseg.core.repository.UserRepository;
+import br.com.grupososseg.model.Role;
 import br.com.grupososseg.model.User;
 
 @Service
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    private IUserRepository userRepository;
+	private final UserRepository userRepository;
 
-    @Autowired
-    private IRoleRepository roleRepository;
+	private final IRoleRepository roleRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(IUserRepository userRepository) {
-        super();
-        this.userRepository = userRepository;
-    }
+	public UserServiceImpl(UserRepository userRepository, IRoleRepository roleRepository,
+			BCryptPasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
-    @Override
-    public User save(UserRegistrationDTO registrationDto) {
+	@Override
+	public User findById(long id) {
 
-        User user = new User(
-                registrationDto.getFirstName()
-                , registrationDto.getUserName()
-                ,passwordEncoder.encode(registrationDto.getPassword())
-                , Arrays.asList(roleRepository.findByName(RoleEnum.USER.getName())));
+		Optional<User> user = userRepository.findById(id);
 
-        return userRepository.save(user);
-    }
+		return user.orElseThrow(() -> new IllegalStateException("Usuario nao encontrado"));
+	}
 
-    public Optional<User>  findByUsername(String username) {
-        return userRepository.findByEmail(username);
-    }
-    
+	@Override
+	public User save(UserRegistrationDTO registrationDto) {
+
+		final Optional<Role> role = roleRepository.findById(registrationDto.getIdRole());
+
+		final User user = new User(
+				registrationDto.getName(), 
+				registrationDto.getEmail(),
+				passwordEncoder.encode(registrationDto.getPassword()),
+				List.of(role.get()));
+
+		return userRepository.save(user);
+	}
+
+	public Optional<User> findByUsername(String username) {
+		return userRepository.findByEmail(username);
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<User> userOptional = findByUsername(username);
-		
+
 		if (!userOptional.isPresent() || !userOptional.get().getActive().isStatus()) {
 			throw new UsernameNotFoundException("User Not found or Inactive ! ");
 		}
-		
+
 		return userOptional.get();
+	}
+
+	@Override
+	public Iterable<User> findAll() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public void delete(Long id) {
+		userRepository.deleteById(id);
 	}
 
 }

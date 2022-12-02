@@ -6,11 +6,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import br.com.grupososseg.model.Customer;
+import br.com.grupososseg.model.User;
 
-public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer>, JpaSpecificationExecutor<Customer> {
+public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
 
-	List<Customer> findByName(String name);
+	List<User> findByName(String name);
 	
-	Optional<Customer> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 }

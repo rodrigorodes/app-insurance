@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import br.com.grupososseg.core.repository.UserRepository;
+import br.com.grupososseg.core.repository.specification.UserSpecification;
+import br.com.grupososseg.model.RoleEnum;
 import br.com.grupososseg.core.repository.ContractRepository;
 
 @RestController

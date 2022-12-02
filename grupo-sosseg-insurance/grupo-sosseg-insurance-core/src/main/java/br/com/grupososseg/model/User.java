@@ -58,10 +58,7 @@ public class User implements UserDetails {
 	private LocalDateTime updatedOn;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-	   name="USER_ROLE",
-	   joinColumns=@JoinColumn(name="user_id", referencedColumnName="co_seq_user"),
-	   inverseJoinColumns=@JoinColumn(name="role_id", referencedColumnName="co_seq_role"))
+	@JoinTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "co_seq_user"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "co_seq_role"))
 	private Collection<Role> roles;
 
 	protected User() {
@@ -197,6 +194,14 @@ public class User implements UserDetails {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getRoleName() {
+		return getRoles().stream().findFirst().get().getName();
+	}
+
+	public Long getRoleId() {
+		return getRoles().stream().findFirst().get().getId();
 	}
 
 }

@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 public enum RoleEnum {
 
 	ADMIN("ROLE_ADMIN", "Administrador"),
-	USER("ROLE_USER", "Utilizador");
+	USER("ROLE_USER", "Influencer");
 
 	private String name;
 	private String descricao;

@@ -25,118 +25,108 @@ import br.com.grupososseg.core.util.UserUtils;
 @Audited
 @AuditTable(value = "tb_insurance_audit")
 @Entity
-@Table(name = "tb_insurance")
-public class Insurance {
+@Table(name = "tb_contract")
+public class Contract {
 
 	@Id
-	@Column(name = "co_seq_insurance", length = 9, nullable = false)
-	@GeneratedValue(generator = "sq_insurance", strategy = GenerationType.IDENTITY)
-	@SequenceGenerator(sequenceName = "sq_insurance", name = "sq_insurance", initialValue = 1, allocationSize = 1)
-	private Integer id;
+	@Column(name = "co_seq_contract", length = 9, nullable = false)
+	@GeneratedValue(generator = "sq_contract", strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(sequenceName = "sq_contract", name = "sq_contract", initialValue = 1, allocationSize = 1)
+	private Long id;
 
-	@Column(name = "no_car_name")
-	private String carName;
+	@Column(name = "no_name")
+	private String contractName;
 
-	@Column(name = "ds_car_year")
-	private int carYear;
-
-	@Column(name = "ds_car_license")
-	private String carLicense;
-
-	@Column(name = "ds_car_detail")
-	private String carDetail;
+	@Column(name = "ds_detail")
+	private String contractDetail;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "co_customer", referencedColumnName = "co_seq_customer", nullable = false)
-	private Customer customer;
+	@JoinColumn(name = "co_user_admin", referencedColumnName = "co_seq_user", nullable = false)
+	private User userAdmin;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "co_user", referencedColumnName = "co_seq_user", nullable = false)
-	private User user;
+	@JoinColumn(name = "co_user_influencer", referencedColumnName = "co_seq_user", nullable = false)
+	private User userInfluencer;
 
 	@Enumerated(EnumType.STRING)
 	@JoinColumn(nullable = false)
 	@Column(name = "active")
 	private YesNo active = YesNo.Y;
+	
+	@Enumerated(EnumType.STRING)
+	@JoinColumn(nullable = false)
+	@Column(name = "ds_type_deal")
+	private TypeDeal typeDeal;
 
 	@Column(name = "dt_create")
 	private LocalDateTime createdOn = LocalDateTime.now();
 
 	@Column(name = "dt_update")
 	private LocalDateTime updatedOn;
+	
+	protected Contract() {}
+
+	public Contract(String contractName, String contractDetail, User userInfluencer, TypeDeal typeDeal) {
+		this.contractName = contractName;
+		this.contractDetail = contractDetail;
+		this.userInfluencer = userInfluencer;
+		this.typeDeal = typeDeal;
+	}
 
 	@PrePersist
 	public void prePersist() {
-		user = UserUtils.getUserLogged();
+		userAdmin = UserUtils.getUserLogged();
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		updatedOn = LocalDateTime.now();
-		user = UserUtils.getUserLogged();
+		userAdmin = UserUtils.getUserLogged();
 	}
 
-	public Insurance() {
-	}
-
-	public Integer getId() {
+	
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public void setCreatedOn(LocalDateTime createdOn) {
 		this.createdOn = createdOn;
 	}
 
-	public String getCarName() {
-		return carName;
+	public String getContractName() {
+		return contractName;
 	}
 
-	public void setCarName(String carName) {
-		this.carName = carName;
+	public void setContractName(String contractName) {
+		this.contractName = contractName;
 	}
 
-	public int getCarYear() {
-		return carYear;
+	public String getContractDetail() {
+		return contractDetail;
 	}
 
-	public void setCarYear(int carYear) {
-		this.carYear = carYear;
+	public void setContractDetail(String contractDetail) {
+		this.contractDetail = contractDetail;
 	}
 
-	public String getCarLicense() {
-		return carLicense;
+	public User getUserAdmin() {
+		return userAdmin;
 	}
 
-	public void setCarLicense(String carLicense) {
-		this.carLicense = carLicense;
+	public void setUserAdmin(User userAdmin) {
+		this.userAdmin = userAdmin;
 	}
 
-	public String getCarDetail() {
-		return carDetail;
+	public User getUserInfluencer() {
+		return userInfluencer;
 	}
 
-	public void setCarDetail(String carDetail) {
-		this.carDetail = carDetail;
+	public void setUserInfluencer(User userInfluencer) {
+		this.userInfluencer = userInfluencer;
 	}
 
 	public YesNo getActive() {
@@ -158,6 +148,14 @@ public class Insurance {
 	public void setUpdatedOn(LocalDateTime updatedOn) {
 		this.updatedOn = updatedOn;
 	}
+	
+	public TypeDeal getTypeDeal() {
+		return typeDeal;
+	}
+
+	public void setTypeDeal(TypeDeal typeDeal) {
+		this.typeDeal = typeDeal;
+	}
 
 	@Override
 	public int hashCode() {
@@ -175,7 +173,7 @@ public class Insurance {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Insurance other = (Insurance) obj;
+		Contract other = (Contract) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

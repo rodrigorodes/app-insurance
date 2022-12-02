@@ -29,85 +29,91 @@ import br.com.grupososseg.model.User;
 @RequestMapping("/contract")
 public class ContractController {
 
-    private ContractRepository contractRepository;
-    private UserRepository userRepository;
+	private ContractRepository contractRepository;
+	private UserRepository userRepository;
 
-    private String add_edit_template="admin/contract/add-edit-contract";
-    private String list_template="admin/contract/list-contract";
-    private String list_redirect="redirect:/contract/list";
+	private String add_edit_template = "admin/contract/add-edit-contract";
+	private String list_template = "admin/contract/list-contract";
+	private String list_redirect = "redirect:/contract/list";
 
-    public ContractController(ContractRepository insuranceRepository, UserRepository userRepository) {
+	public ContractController(ContractRepository insuranceRepository, UserRepository userRepository) {
 		this.contractRepository = insuranceRepository;
 		this.userRepository = userRepository;
 	}
 
 	@GetMapping("/add")
-    public String add(CreateContractDTO createContractDTO, Model model){
-    	
-        model.addAttribute("contract", createContractDTO);
-        model.addAttribute("users", userRepository.findAll());
-        model.addAttribute("typeDeals", TypeDeal.values());
+	public String add(CreateContractDTO createContractDTO, Model model) {
 
-        return add_edit_template;
-    }
+		model.addAttribute("contract", createContractDTO);
+		model.addAttribute("users", userRepository.findAll());
+		model.addAttribute("typeDeals", TypeDeal.values());
 
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") long id, Model model){
-    	
-        Contract contract = contractRepository.findById(id).get();
-        
-        CreateContractDTO createContractDTO = new CreateContractDTO(contract);
-        
-        model.addAttribute("contract", createContractDTO);
-        model.addAttribute("users", userRepository.findById(contract.getUserInfluencer().getId()).get());
-        model.addAttribute("typeDeals", TypeDeal.values());
+		return add_edit_template;
+	}
 
-        return add_edit_template;
-    }
+	@GetMapping("/edit/{id}")
+	public String edit(@PathVariable("id") long id, Model model) {
+
+		Contract contract = contractRepository.findById(id).get();
+
+		CreateContractDTO createContractDTO = new CreateContractDTO(contract);
+
+		model.addAttribute("contract", createContractDTO);
+		model.addAttribute("users", userRepository.findById(contract.getUserInfluencer().getId()).get());
+		model.addAttribute("typeDeals", TypeDeal.values());
+
+		return add_edit_template;
+	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-    @PostMapping("/save")
-    public String save(
-    		@Valid @ModelAttribute("contract") CreateContractDTO createContractDTO,
-    		BindingResult result, 
-    		Model model){
-        model.addAttribute("contract", createContractDTO);
+	@PostMapping("/save")
+	public String save(@Valid @ModelAttribute("contract") CreateContractDTO createContractDTO, BindingResult result,
+			Model model) {
+		model.addAttribute("contract", createContractDTO);
 
-        if(result.hasErrors()){
-            return add_edit_template;
-        }
-        
-       final TypeDeal typeDeal = TypeDeal.findByName(createContractDTO.getTypeDeal());
-        
-       final Optional<User> user = userRepository.findById(createContractDTO.getIdInfluencer());
-        
-        Contract contract = new Contract(
-        		createContractDTO.getContractName(), 
-        		createContractDTO.getContractDetail(), 
-        		user.get(), 
-        		typeDeal);
-        
-        contractRepository.save(contract);
-        
-        return list_redirect+"?success";
-    }
+		if (result.hasErrors()) {
+			return add_edit_template;
+		}
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") long id, Model model) {
-    	contractRepository.deleteById(id);
+		final TypeDeal typeDeal = TypeDeal.findByName(createContractDTO.getTypeDeal());
 
-        return list_redirect+"?deleted";
-    }
+		final Optional<User> user = userRepository.findById(createContractDTO.getIdInfluencer());
 
-    @GetMapping("/list")
-    public String listProduct(Model model) {
-        final List<Contract> contracts = contractRepository.findAll();
-        final List<ContractListDTO> contractsDtos = contracts.stream()
-               .map(contract -> new ContractListDTO(contract))
-               .collect(Collectors.toList());
-        
-        model.addAttribute("listContract", contractsDtos);
+		Optional<Contract> contract = Optional.empty();
+		
+		if (createContractDTO.getId() != null) {
+			contract = contractRepository.findById(createContractDTO.getId());
+			contract.get().setContractName(createContractDTO.getContractName());
+			contract.get().setContractDetail(createContractDTO.getContractDetail());
+			contract.get().setTypeDeal(typeDeal);
+		} 
+		
+		else {
+			contract = Optional.ofNullable(new Contract(createContractDTO.getContractName(), createContractDTO.getContractDetail(),
+					user.get(), typeDeal));
 
-        return list_template;
-    }
+		} 
+
+		contractRepository.save(contract.get());
+		
+		return list_redirect + "?success";
+	}
+
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable("id") long id, Model model) {
+		contractRepository.deleteById(id);
+
+		return list_redirect + "?deleted";
+	}
+
+	@GetMapping("/list")
+	public String listProduct(Model model) {
+		final List<Contract> contracts = contractRepository.findAll();
+		final List<ContractListDTO> contractsDtos = contracts.stream().map(contract -> new ContractListDTO(contract))
+				.collect(Collectors.toList());
+
+		model.addAttribute("listContract", contractsDtos);
+
+		return list_template;
+	}
 }
